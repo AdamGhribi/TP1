@@ -11,7 +11,7 @@
 Dresseur::Dresseur() {
 	// code
     nom_="";
-	creatures_=nullptr;
+	creatures_= new Creature*;
 	nombreCreatures_=0;
     nombreCreaturesMax_=2;
 }
@@ -64,7 +64,7 @@ bool Dresseur::ajouterCreature(const Creature& creature) {
 	// code
 	bool existe = false;
 	int i = 0;
-	while (existe == false) {
+	while ((existe == false) && (i < nombreCreatures_)) {
 		if (creatures_[i]->obtenirNom() == creature.obtenirNom()) {
 			existe = true;
 		}
@@ -86,7 +86,7 @@ bool Dresseur::retirerCreature(const std::string& nom) {
 	// code
 	bool existe = false;
 	int i = 0;
-	while (existe == false) {
+	while ((existe == false) && (i < nombreCreatures_)) {
 		if (creatures_[i]->obtenirNom() == nom) {
 			existe = true;
 			delete creatures_[i]; //~
@@ -100,7 +100,7 @@ bool Dresseur::retirerCreature(const std::string& nom) {
 // TODO: fonction d'affichage
 void Dresseur::affichage() const {
 	// afficher le nom et le nombre de creature
-	cout << obtenirNom() << " possede " << obtenirNombreCreatures << " creature(s)" << endl;
+	cout << obtenirNom() << " possede " << obtenirNombreCreatures() << " creature(s)" << endl;
 	// ex: Leon possede 1 creature(s)
 	// boucler sur chaque creature et afficher ses informations
 	for (unsigned int i = 0; i < nombreCreatures_; i++) {
