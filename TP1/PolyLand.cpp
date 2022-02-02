@@ -10,9 +10,9 @@
 // TODO: constructeur
 PolyLand::PolyLand() {
 	// code
-	dresseurs_= new Dresseur*;
+	dresseurs_= new Dresseur*[MAX_DRESSEURS];
 	nombreDresseurs_=0;
-	creatures_= new Creature*;
+	creatures_= new Creature*[MAX_CREATURES];
 	nombreCreatures_=0;
 }
 
@@ -29,6 +29,7 @@ PolyLand::~PolyLand() {
 //	ex: Leon a bien �t� ajout� !
 bool PolyLand::ajouterDresseur(Dresseur* dresseur) {
 	// code
+	bool verifier = nombreDresseurs_ < MAX_DRESSEURS;
 	bool existe = false;
 	int i = 0;
 	while ((existe == false)&&(i< nombreDresseurs_)) {
@@ -38,12 +39,11 @@ bool PolyLand::ajouterDresseur(Dresseur* dresseur) {
 		else
 			i++;
 	}
-	bool ajoute = existe && (nombreDresseurs_ < MAX_DRESSEURS );
+	bool ajoute = existe && verifier;
 	if (ajoute)
 		dresseurs_[nombreDresseurs_] = dresseur;
 	
 	return ajoute;
-	return false;
 }
 
 // TODO: ajouter creature dans creatures_
@@ -52,6 +52,7 @@ bool PolyLand::ajouterDresseur(Dresseur* dresseur) {
 //	ex: Pikachu a bien �t� ajout� !
 bool PolyLand::ajouterCreature(const Creature& creature) {
 	// code
+	bool verifier = nombreCreatures_ < MAX_CREATURES;
 	bool existe = false;
 	int i = 0;
 	while ((existe == false)&& (i < nombreCreatures_)) {
@@ -61,7 +62,7 @@ bool PolyLand::ajouterCreature(const Creature& creature) {
 		else
 			i++;
 	}
-	bool ajoute= existe && (nombreCreatures_ < MAX_CREATURES);
+	bool ajoute= existe && verifier;
 	if (ajoute) 
 		*creatures_[nombreCreatures_] = creature;
 
@@ -72,14 +73,13 @@ bool PolyLand::ajouterCreature(const Creature& creature) {
 bool PolyLand::retirerDresseur(const std::string& nom) {
 	// code
 	bool existe = false;
-	int i = 0;
-	while ((existe == false) && (i < nombreDresseurs_)) {
+	for (int i = 0; i < nombreDresseurs_; i++) {
 		if (dresseurs_[i]->obtenirNom() == nom) {
-			existe = true;
-			delete dresseurs_[i]; //~
+			dresseurs_[i] = dresseurs_[nombreDresseurs_ - 1];
+			existe = (dresseurs_[i]->obtenirNom() == nom);
+			nombreDresseurs_--;
+			break;
 		}
-		else
-			i++;
 	}
 	return existe;
 }
@@ -88,14 +88,13 @@ bool PolyLand::retirerDresseur(const std::string& nom) {
 bool PolyLand::retirerCreature(const std::string& nom) {
 	// code
 	bool existe = false;
-	int i = 0;
-	while ((existe == false) && (i < nombreCreatures_)) {
+	for (int i = 0; i < nombreCreatures_; i++) {
 		if (creatures_[i]->obtenirNom() == nom) {
-			existe = true;
-			delete creatures_[i]; //~
+			creatures_[i] = creatures_[nombreCreatures_ - 1];
+			nombreCreatures_--;
+			existe = (creatures_[i]->obtenirNom() == nom);
+			break;
 		}
-		else
-			i++;
 	}
 	return existe;
 }
@@ -122,21 +121,25 @@ Creature* PolyLand::choisirCreatureAleatoire() {
 // TODO: rechercher un dresseur par nom
 Dresseur* PolyLand::choisirDresseur(const string& nom) {
 	// code
-	int i = 0;
-	while (dresseurs_[i]->obtenirNom() != nom) {
-		i++;
+	Dresseur dresseur = Dresseur();
+	for (int i = 0; i < nombreDresseurs_; i++) {
+		if (dresseurs_[i]->obtenirNom() == nom)
+			return dresseurs_[i];
+		break;
 	}
-	return dresseurs_[i];
+	return &dresseur;
 }
 
 // TODO: rechercher une creature par nom
 Creature* PolyLand::choisirCreature(const string& nom) {
 	// code
-	int i = 0;
-	while ((creatures_[i]->obtenirNom() != nom)&& (i < nombreCreatures_))  {
-		i++;
+	Creature creature = Creature();
+	for (int i = 0; i < nombreCreatures_; i++) {
+		if (creatures_[i]->obtenirNom() == nom)
+			return creatures_[i];
+			break;
 	}
-	return creatures_[i];
+	return &creature;
 }
 
 // TODO: ajouter une creature a un dresseur
@@ -156,17 +159,11 @@ void PolyLand::infoDresseur(const std::string& nom) const {
 	// effectuer une recherche par nom du dresseur passe en parametre
 	Dresseur* dresseur = nullptr;
 	// code
-	int i = 0; 
-	bool existe = false;
-	while ((existe == false) && (i < nombreDresseurs_)) {
-		if (dresseurs_[i]->obtenirNom() == nom) {
-			existe = true;
-		}
-		else
-			i++;
+	for (int i = 0; i < nombreDresseurs_; i++) {
+		if (dresseurs_[i]->obtenirNom() == nom)
+			dresseur=dresseurs_[i];
+		   break;
 	}
-	if (existe)
-		dresseur = dresseurs_[i];
 	if (dresseur != nullptr) {
 		cout << "\u001b[32;1mInformations sur le dresseur: \033[0m" << std::endl;
 		// afficher le dresseur
