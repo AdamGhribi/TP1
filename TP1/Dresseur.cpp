@@ -11,9 +11,9 @@
 Dresseur::Dresseur() {
 	// code
     nom_="";
-	creatures_= new Creature*;
 	nombreCreatures_=0;
     nombreCreaturesMax_=2;
+	creatures_ = new Creature*[nombreCreaturesMax_];
 }
 
 // TODO: constructeur par parametre avec liste d'initialisation
@@ -25,6 +25,7 @@ Dresseur::Dresseur(const std::string& nom) : Dresseur() {
 // TODO: destructeur
 Dresseur::~Dresseur() {
 	// code
+	delete[] creatures_;
 }
 
 // TODO: Getters
@@ -77,6 +78,13 @@ bool Dresseur::ajouterCreature(const Creature& creature) {
 	}
 	else {
 		nombreCreaturesMax_ *= 2;
+		Creature** newArray = new Creature * [nombreCreaturesMax_];
+		for (int i=0; i < nombreCreatures_; i++) {
+			newArray[i] = creatures_[i];
+		}
+		delete[] creatures_;
+		creatures_ = newArray;
+		delete[] newArray;
 	}
 	return false;
 }
@@ -84,15 +92,12 @@ bool Dresseur::ajouterCreature(const Creature& creature) {
 // TODO: retire creature dans creatures_
 bool Dresseur::retirerCreature(const std::string& nom) {
 	// code
-	bool existe = false;
-	int i = 0;
-	while ((existe == false) && (i < nombreCreatures_)) {
+	for (int i = 0; i < nombreCreatures_; i++) {
 		if (creatures_[i]->obtenirNom() == nom) {
-			existe = true;
-			delete creatures_[i]; //~
+			creatures_[i] = creatures_[nombreCreatures_ - 1];
+			nombreCreatures_--;
+			break;
 		}
-		else
-			i++;
 	}
 	return false;
 }
