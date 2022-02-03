@@ -1,7 +1,7 @@
 /*
 * @fichier: PolyLand.h
-* @auteurs:
-* @date:
+* @auteurs: Adam Ghribi, Carole Keriaky
+* @date: 03.02.2022
 * @description: Polyland est la map de jeu que l'on va explorer, elle contient les differents elements de jeu
 */
 
@@ -10,16 +10,16 @@
 // TODO: constructeur
 PolyLand::PolyLand() {
 	// code
-	dresseurs_= new Dresseur*[MAX_DRESSEURS];
-	nombreDresseurs_=0;
+	dresseurs_= new Dresseur * [MAX_DRESSEURS];
+	nombreDresseurs_= NULL;
 	creatures_= new Creature*[MAX_CREATURES];
-	nombreCreatures_=0;
+	nombreCreatures_= NULL;
 }
 
 // TODO: destructeur
 PolyLand::~PolyLand() {
 	// code
-	
+
 }
 
 // TODO: ajouter dresseur dans dresseurs_
@@ -29,21 +29,18 @@ PolyLand::~PolyLand() {
 //	ex: Leon a bien �t� ajout� !
 bool PolyLand::ajouterDresseur(Dresseur* dresseur) {
 	// code
-	bool verifier = nombreDresseurs_ < MAX_DRESSEURS;
-	bool existe = false;
-	int i = 0;
-	while ((existe == false)&&(i< nombreDresseurs_)) {
-		if (dresseurs_[i]->obtenirNom() == dresseur->obtenirNom()) {
-			existe = true;
+	if (nombreDresseurs_ < MAX_DRESSEURS) {
+		for (unsigned int i = 0; i < nombreDresseurs_; i++) {
+			if (dresseurs_[i]->obtenirNom() == dresseur->obtenirNom()) {
+				return false;
+			}
 		}
-		else
-			i++;
+		dresseurs_[nombreDresseurs_++] = new Dresseur(*dresseur);
+		return true;
 	}
-	bool ajoute = existe && verifier;
-	if (ajoute)
-		dresseurs_[nombreDresseurs_] = dresseur;
-	
-	return ajoute;
+	else {
+		return false;
+	}
 }
 
 // TODO: ajouter creature dans creatures_
@@ -52,51 +49,39 @@ bool PolyLand::ajouterDresseur(Dresseur* dresseur) {
 //	ex: Pikachu a bien �t� ajout� !
 bool PolyLand::ajouterCreature(const Creature& creature) {
 	// code
-	bool verifier = nombreCreatures_ < MAX_CREATURES;
-	bool existe = false;
-	int i = 0;
-	while ((existe == false)&& (i < nombreCreatures_)) {
-		if (creatures_[i]->obtenirNom() == creature.obtenirNom()) {
-			existe = true;
-		}
-		else
-			i++;
+	if (nombreCreatures_ < MAX_CREATURES) {
+		creatures_[nombreCreatures_++] = new Creature(creature);
+		return true;
 	}
-	bool ajoute= existe && verifier;
-	if (ajoute) 
-		*creatures_[nombreCreatures_] = creature;
-
-	return ajoute;
+	else {
+		return false;
+	}
 }
 
 // TODO: retire dresseur dans dresseurs_
 bool PolyLand::retirerDresseur(const std::string& nom) {
 	// code
-	bool existe = false;
-	for (int i = 0; i < nombreDresseurs_; i++) {
+	for (unsigned int i = 0; i < nombreDresseurs_; i++) {
 		if (dresseurs_[i]->obtenirNom() == nom) {
 			dresseurs_[i] = dresseurs_[nombreDresseurs_ - 1];
-			existe = (dresseurs_[i]->obtenirNom() == nom);
 			nombreDresseurs_--;
-			break;
+			return true;
 		}
 	}
-	return existe;
+	return false;
 }
 
 // TODO: retire creature dans creatures_
 bool PolyLand::retirerCreature(const std::string& nom) {
 	// code
-	bool existe = false;
-	for (int i = 0; i < nombreCreatures_; i++) {
+	for (unsigned int i = 0; i < nombreCreatures_; i++) {
 		if (creatures_[i]->obtenirNom() == nom) {
 			creatures_[i] = creatures_[nombreCreatures_ - 1];
 			nombreCreatures_--;
-			existe = (creatures_[i]->obtenirNom() == nom);
-			break;
+			return true;
 		}
 	}
-	return existe;
+	return false;
 }
 
 // TODO: generer un indice aleatoire et
@@ -109,12 +94,10 @@ Dresseur* PolyLand::choisirDresseurAleatoire() {
 	return dresseurs_[i];
 }
 
-// TODO: generer un indice aleatoire et
-// retourner la creature a cet indice
-// *verifier le nb de creature
 Creature* PolyLand::choisirCreatureAleatoire() {
 	// code
-	int i = rand() * nombreCreatures_;
+	int i = rand() % nombreCreatures_;
+
 	return creatures_[i];
 }
 
@@ -122,36 +105,34 @@ Creature* PolyLand::choisirCreatureAleatoire() {
 Dresseur* PolyLand::choisirDresseur(const string& nom) {
 	// code
 	Dresseur dresseur = Dresseur();
-	for (int i = 0; i < nombreDresseurs_; i++) {
+	for (unsigned int i = 0; i < nombreDresseurs_; i++) {
 		if (dresseurs_[i]->obtenirNom() == nom)
 			return dresseurs_[i];
-		break;
+		else
+			return &dresseur;
 	}
-	return &dresseur;
 }
 
 // TODO: rechercher une creature par nom
 Creature* PolyLand::choisirCreature(const string& nom) {
 	// code
 	Creature creature = Creature();
-	for (int i = 0; i < nombreCreatures_; i++) {
+	for (unsigned int i = 0; i < nombreCreatures_; i++) {
 		if (creatures_[i]->obtenirNom() == nom)
 			return creatures_[i];
-			break;
+		else
+			return &creature;
 	}
-	return &creature;
 }
 
 // TODO: ajouter une creature a un dresseur
 bool PolyLand::attraperCreature(Dresseur* dresseur, const Creature& creature) {
-	dresseur->ajouterCreature(creature);
-	return false;
+	return dresseur->ajouterCreature(creature);
 }
 
 // TODO: retirer une creature a un dresseur
 bool PolyLand::relacherCreature(Dresseur* dresseur, const Creature& creature) {
-	dresseur->retirerCreature(creature.obtenirNom());
-	return false;
+	return dresseur->retirerCreature(creature.obtenirNom());
 }
 
 // TODO: completer le code d'affichage
@@ -159,7 +140,7 @@ void PolyLand::infoDresseur(const std::string& nom) const {
 	// effectuer une recherche par nom du dresseur passe en parametre
 	Dresseur* dresseur = nullptr;
 	// code
-	for (int i = 0; i < nombreDresseurs_; i++) {
+	for (unsigned int i = 0; i < nombreDresseurs_; i++) {
 		if (dresseurs_[i]->obtenirNom() == nom)
 			dresseur=dresseurs_[i];
 		   break;

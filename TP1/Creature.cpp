@@ -1,7 +1,7 @@
 /*
 * @fichier: Creature.cpp
-* @auteurs:
-* @date:
+* @auteurs:Adam Ghribi, Carole Keriaky
+* @date: 03.02.2002
 * @description: Les creatures sont des etres destines au combat
 */
 
@@ -11,10 +11,10 @@
 Creature::Creature() {
 	// code
 	nom_ = "";
-	attaque_ = 0;
-	defense_ = 0;
-	pointDeVie_ = 0;
-	energie_ = 0;
+	attaque_ = NULL;
+	defense_ = NULL;
+	pointDeVie_ = NULL;
+	energie_ = NULL;
 	pouvoir_ = Pouvoir();
 }
 

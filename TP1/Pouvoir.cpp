@@ -1,7 +1,7 @@
 /*
 * @fichier: Pouvoir.cpp
-* @auteurs:
-* @date:
+* @auteurs: Adam Ghribi, Carole Keriaky
+* @date: 03.02.2022
 * @description: La classe Pouvoir correspond aux differents attaques
 */
 
@@ -11,8 +11,8 @@
 Pouvoir::Pouvoir() {
 	// code
 	nom_ = "";
-	nombreDeDegat_ = 0;
-	manaNecessaire_ = 0;
+	nombreDeDegat_ = NULL;
+	manaNecessaire_ = NULL;
 }
 
 // TODO: constructeur par parametre avec liste d'initialisation
